@@ -49,8 +49,12 @@ accomodationRouter.put("/:accomodationId", loginFirstMiddleware, hostsOnlyMiddle
 });
 accomodationRouter.delete("/:accomodationId", loginFirstMiddleware, hostsOnlyMiddleware, async (req, res, next) => {
   try {
-    const accomodation = await AccomodationsModel.findByIdAndDelete(req.params.accomodationId);
-    res.send(accomodation);
+    //const accomodation = await AccomodationsModel.findByIdAndDelete(req.params.accomodationId);
+    const user = await UsersModel.findById(req.user._id);
+    const accomodations = user.accomodation;
+    const remaining = accomodations.filter((accomodation) => accomodation._id !== req.params.accomodationId);
+    //await UsersModel.save();
+    res.send(remaining);
   } catch (error) {
     next(error);
   }
