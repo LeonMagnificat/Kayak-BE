@@ -12,7 +12,8 @@ accomodationRouter.post("/", loginFirstMiddleware, hostsOnlyMiddleware, async (r
     const newAccomodation = await AccomodationsModel(req.body);
     const { _id } = await newAccomodation.save();
     const host = await UsersModel.findByIdAndUpdate(req.user._id, { $push: { accomodation: _id } }, { new: true, runValidators: true });
-    res.status(201).send({ newAccomodation, host });
+    const Accomodation = await AccomodationsModel.findByIdAndUpdate(_id, { $push: { host: req.user._id } }, { new: true, runValidators: true });
+    res.status(201).send({ Accomodation, host });
   } catch (error) {
     next(error);
   }
